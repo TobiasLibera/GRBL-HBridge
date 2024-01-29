@@ -1,30 +1,30 @@
 # GRBL_HBridge
 Arduino Sketch to implement a simple and cheap H-Bridge adaption for [GRBL](https://github.com/grbl/grbl).\
-Includes configurable soft start and soft stop for the spindle motor.
+Includes configurable soft start and soft stop for the spindle motor and seperated direction signals.
 
 <br />
 
 ## Description
-The GRBL controller is designed to dynamically control the spindle motor of an CNC router using a PWM signal output on the SpindleEnable pin and a digital signal output on the SpindleDirection pin.\
-H-Bridges often are controlled with a PWM signal input and a seperate input pin for selecting clockwise or counter-clockwise direction.
+The GRBL controller is designed to dynamically control the spindle motor of an CNC router using a PWM signal output on the `Spindle Enable` pin and a digital signal output on the `Spindle Direction` pin.\
+H-Bridges often are controlled with a PWM signal input and a seperate input pins for selecting clockwise or counter-clockwise direction.
 
 <br />
 
-This GRBL_HBridge sketch adds the capability for
+This GRBL_HBridge Arduino sketch adds the capability for
 
 - soft start of spindle
 - soft stop of spindle
 - soft transition between two spindle speeds
-- seperate pin for cc and ccw direction
+- seperate pins for cc and ccw direction
 - possibility of inverting cc and ccw pin
 
 <br />
 
-This code is originally designed to run on an ATTiny85 microcontroller. It fits the smallest version (2048 bytes program storage space, 128 bytes dynamic memory) and makes it possible to realize a simple H-Bridge adaption with improved spindle control for very small money.
+This code is originally designed to run on an ATTiny85 microcontroller. It fits the smallest version of ATTiny85 (2048 bytes program storage space, 128 bytes dynamic memory) and makes it possible to realize a simple H-Bridge adaption with improved spindle control for small money and without much effort.
 
 <br />
 
-Of course you can run this code on every development board you want to.  \
+Of course you can run this code on every development board you want to.\
 The configuration is done with the `Config.h` file.\
 There, it's possible to adjust the **pin mapping** as well as the **soft start**, **soft stop** and **soft transition timespans**.
 
@@ -33,11 +33,11 @@ There, it's possible to adjust the **pin mapping** as well as the **soft start**
 ## Prerequisite
 
 You should have a working GRBL controller **and** the variable spindle mode should be activated.\
-Consult the [GRBL Documentation](https://github.com/grbl/grbl/wiki) for how to do this.
+Consult the [GRBL Documentation](https://github.com/grbl/grbl/wiki) on how to do this.
 
 <br />
 
-## Usage
+## Installation
 
 _(Default)_
 
@@ -45,13 +45,32 @@ _(Default)_
 
 The default pin mapping of GRBL_HBridge for an **ATTiny85** microcontroller.
 
-TODO: Insert Picture
+<br />
+
+<img src="./Images/pinout.png" width="512"/>
+
+A good throw is to connect VCC to +5V. You can use a 5V pin of the GRBL controller for this.\
+If you use another voltage level for VCC, you may end up needing some kind of level shifting between GRBL controller and GRBL_HBridge and H-Bridge. I can't think of a situation, where this makes sense but if you do so, you will know why you do so.\
+I guess.
+
+**Note**:\
+Mind that `H-Bridge PWM` pin has to be capable of PWM.
+
+<br />
 
 ### Wiring
 
 The default wiring of GRBL_HBridge when using a **BTS7960** H-Bridge.
 
-TODO: Insert Picture
+<img src="./Images/wiring.png" width="512"/>
+
+No additional parts are strictly needed.\
+If you feel like having an extra-super-good day, you can add a 100nF ceramic capacitor between VCC and GND of the ATTiny (if using one) as close to the controller as possible. It's good practice but not absolutely necessary, just _nice-to-have_.
+
+**Note**:\
+When the variable spindle mode is active, the `END STOPS Z+/-` pin and the `SpnEn` pin of the GRBL controller are swapped.
+
+<br />
 
 ### Flash
 
@@ -63,12 +82,15 @@ But there are no dependencies to external libraries and GRBL_HBridge uses only s
 For flashing the code to an ATTiny85, you can use an Arduino Uno (or any other board) as ISP programmer.\
 Some tutorials on how to get this done:
 
-TODO: Add tutorials / examples
-
+- [Tutorial on Instructables](https://www.instructables.com/How-to-Program-an-Attiny85-From-an-Arduino-Uno/) by _NemesisC_
+- [Tutorial on Wolles Elektronikkiste](https://wolles-elektronikkiste.de/en/programming-attiny-with-arduino-code) by _Wolfgang Ewald_ (English and German version)
+- [Tutorial on Arduino Project Hub](https://projecthub.arduino.cc/alaspuresujay/use-an-attiny85-with-arduino-ide-d847c5) by _alaspuresujay_
+  
 <br />
 
-After setup of a suitable programmer you could (for example) add [ATTinyCore ](https://github.com/SpenceKonde/ATTinyCore) by Spence Konde to the Arduino IDE for support of ATTiny controllers.\
-After this you need to ...
+After setup of a suitable programmer you could (for example) add [ATTinyCore ](https://github.com/SpenceKonde/ATTinyCore) by _Spence Konde_ to the Arduino IDE for support of ATTiny controllers family. This is the Arduino Core adaption I used for developing.
+
+From this point it's very straight forward ...
 
 1. Download the `GRBL_HBridge` directory of this repository
 2. Edit the `Config.h`file to fit your needs
@@ -79,8 +101,7 @@ After this you need to ...
 ### What else is to do?
 
 There is no need for any other steps.\
-Just connect the controller or board to your GRBL controller and H-Bridge and it's ready for use.\
-If you feel like having an extra super good day, you can add a 100nF ceramic capacitor between VCC and GND of the ATTiny (if using one) as near as possible to the controller. It's good practice but not absolutely necessary, just _nice-to-have_.
+Just connect the controller or board to your GRBL controller and H-Bridge and it's ready for use.
 
 <br />
 
@@ -160,13 +181,13 @@ What is shown here, are the default values.
 ```
 
 More configuration is possible.\
-Please study the `Config.h` file to find out.
+Please study the `Config.h` file for more information.
 
 <br />
 
-## Implementation and Limitation
+## Implementation and Limitations
 
-The soft start, soft stop and soft transition is done by reading the duty of the PWM signal of the SpindleEnable pin of the GRBL controller. Some software sided dragging is added to a change of the PWM duty and the signal is mirrored to the PWM output pin of GRBL_HBridge.
+The soft start, soft stop and soft transition is done by reading the duty of the PWM signal of the pin controlling the spindle speed defined by the GRBL controller. Some software sided dragging is added to changes of the PWM duty and this signal is then given to the PWM output pin of GRBL_HBridge, which is defined for controlling the spindle speed.
 
 <br />
 
@@ -182,7 +203,7 @@ $\frac{1}{977Hz} \cdot \frac{1}{255} = 4{\mu}s$
 
 <br />
 
-This means that the soft start, stoft stop and soft transition will be kind of _sloppy_ at spindle speeds slower as the following percentage of the maximum spindle speed:
+This means that the soft start, stoft stop and soft transition may will be kind of _sloppy_ at spindle speeds slower as the following percentage of the maximum spindle speed:
 
 $\frac{10{\mu}s}{4{\mu}s} \cdot \frac{1}{255} \cdot 100\\% = 1\\%$
 
