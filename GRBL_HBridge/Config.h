@@ -61,14 +61,14 @@
   PIN_H_BRIDGE_CW [Output Pin]
   Clockwise Direction Pin of the H-Bridge.
   By default, this value is the inverted value of
-  PIN_GRBLE_SPINDLE_DIR.
+  PIN_GRBL_SPINDLE_DIR.
 
   PIN_H_BRIDGE_CW [Output Pin]
   Counter-Clockwise Direction Pin of the H-Bridge.
   By default, this value is the not inverted value of
-  PIN_GRBLE_SPINDLE_DIR.
+  PIN_GRBL_SPINDLE_DIR.
 
-  (The default specification of pins fits an ATTiny85)
+  (The default definition of pins fits an ATTiny85)
 */
 
 #define   PIN_GRBL_SPINDLE_EN   PB0
