@@ -1,3 +1,23 @@
+/*
+  GRBL_HBridge.ino - Arduino sketch file
+  Part of GRBL_HBridge
+  https://github.com/TobiasLibera/GRBL_HBridge
+
+  Copyright (c) 2024 Tobias Libera
+
+  GRBL_HBridge is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  GRBL_HBridge is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with Grbl.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 #include  "GRBL_HBridge.h"
 
