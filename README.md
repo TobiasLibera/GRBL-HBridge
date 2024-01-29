@@ -182,7 +182,7 @@ $\frac{1}{977Hz} \cdot \frac{1}{255} = 4{\mu}s$
 
 <br />
 
-This means that the soft start, stoft stop and soft transition will be kind of _sloppy_ at spindle speeds which are slower then the following percentage of the maximum spindle speed:
+This means that the soft start, stoft stop and soft transition will be kind of _sloppy_ at spindle speeds slower as the following percentage of the maximum spindle speed:
 
 $\frac{10{\mu}s}{4{\mu}s} \cdot \frac{1}{255} \cdot 100\\% = 1\\%$
 
