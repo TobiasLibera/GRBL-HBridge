@@ -1,12 +1,12 @@
-# GRBL-HBridge
-Arduino Sketch to implement an easy H-Bridge adaption for [GRBL](https://github.com/grbl/grbl).\
+# GRBL_HBridge
+Arduino Sketch to implement a simple and cheap H-Bridge adaption for [GRBL](https://github.com/grbl/grbl).\
 Includes configurable soft start and soft stop for the spindle motor.
 
 <br />
 
 ## Description
-The GRBL controller for CNC machines is designed to dynamically control the spindle motor of an CNC router with a PWM signal on the SpindleEnable Pin and a digital signal on the SpindleDirection Pin.\
-H-Bridges often are controlled with a PWM signal input and a seperate pin for clockwise and for counter-clockwise direction.
+The GRBL controller is designed to dynamically control the spindle motor of an CNC router using a PWM signal output on the SpindleEnable pin and a digital signal output on the SpindleDirection pin.\
+H-Bridges often are controlled with a PWM signal input and a seperate input pin for selecting clockwise or counter-clockwise direction.
 
 <br />
 
@@ -20,13 +20,13 @@ This GRBL_HBridge sketch adds the capability for
 
 <br />
 
-This is code is designed to run on an ATTiny85 microcontroller by default. It fits the smallest version (2 kBytes program storage space, 128 Bytes dynamic memory) and makes it possible to get a simple H-Bridge adaption for very small money.
+This code is originally designed to run on an ATTiny85 microcontroller. It fits the smallest version (2048 bytes program storage space, 128 bytes dynamic memory) and makes it possible to realize a simple H-Bridge adaption with improved spindle control for very small money.
 
 <br />
 
 Of course you can run this code on every development board you want to.  \
 The configuration is done with the `Config.h` file.\
-There it's possible to adjust the **pin mapping** as well as the **soft start**, **soft stop** and **soft transition timespans**.
+There, it's possible to adjust the **pin mapping** as well as the **soft start**, **soft stop** and **soft transition timespans**.
 
 <br />
 
@@ -43,44 +43,44 @@ _(Default)_
 
 ### Pins
 
-This is the default pin mapping of GRBL-HBridge for an **ATTiny85** microcontroller.
+The default pin mapping of GRBL_HBridge for an **ATTiny85** microcontroller.
 
 TODO: Insert Picture
 
 ### Wiring
 
-This is the default wiring of GRBL-HBridge when using a **BTS7960** H-Bridge.
+The default wiring of GRBL_HBridge when using a **BTS7960** H-Bridge.
 
 TODO: Insert Picture
 
 ### Flash
 
 The default controller, which this code was designed for, is an ATTiny85.\
-But there are no dependencies to external libraries and GRBL-HBridge uses only standard functionality of the Arduino IDE, so it should run on every development board, which is adapted to Arduino Core.
+But there are no dependencies to external libraries and GRBL_HBridge uses only standard functionality of the Arduino IDE, so it should run on every development board, which is adapted to Arduino Core.
 
 <br />
 
-For flashing the code to an ATTiny85 you can use an Arduino Uno (or every other board) as ISP programmer.\
-Some examples / tutorials to get this done:
+For flashing the code to an ATTiny85, you can use an Arduino Uno (or any other board) as ISP programmer.\
+Some tutorials on how to get this done:
 
 TODO: Add tutorials / examples
 
 <br />
 
-After setup of a suitable programmer you could use [ATTinyCore ](https://github.com/SpenceKonde/ATTinyCore) by Spence Konde to get the code compiled for an ATTiny controller.\
+After setup of a suitable programmer you could (for example) add [ATTinyCore ](https://github.com/SpenceKonde/ATTinyCore) by Spence Konde to the Arduino IDE for support of ATTiny controllers.\
 After this you need to ...
 
 1. Download the `GRBL_HBridge` directory of this repository
 2. Edit the `Config.h`file to fit your needs
-3. Flash `GRBL_HBridge.ino` to the controller or development board
+3. Compile and flash `GRBL_HBridge.ino` to the controller or development board
 
 <br />
 
 ### What else is to do?
 
 There is no need for any other steps.\
-Just connect the controller or board to your GRBL controller and H-Bridge and it's done.\
-If you feel like having an extra super good day, you can add a 100nF ceramic capacitor between VCC and GND of the ATTiny controller (if using one). It's good practice but not absolutely necessary, just _nice-to-have_.
+Just connect the controller or board to your GRBL controller and H-Bridge and it's ready for use.\
+If you feel like having an extra super good day, you can add a 100nF ceramic capacitor between VCC and GND of the ATTiny (if using one) as near as possible to the controller. It's good practice but not absolutely necessary, just _nice-to-have_.
 
 <br />
 
@@ -166,19 +166,19 @@ Please study the `Config.h` file to find out.
 
 ## Implementation and Limitation
 
-The soft start, soft stop and soft transition is done by reading the duty of the PWM signal of the SpindleEnable pin of the GRBL controller. Some software sided dragging is added to a change of the PWM duty and the signal is mirrored to the PWM output pin of GRBL-HBridge.
+The soft start, soft stop and soft transition is done by reading the duty of the PWM signal of the SpindleEnable pin of the GRBL controller. Some software sided dragging is added to a change of the PWM duty and the signal is mirrored to the PWM output pin of GRBL_HBridge.
 
 <br />
 
-The reading of the PWM duty is done by the `pulseIn()` function of Arduino Core library. This leads to reading in a `HIGH` pulse with a **minimal length of 1 microsecond**.\
-As you can read in the [Arduino Reference](https://www.arduino.cc/reference/en/language/functions/advanced-io/pulsein/), the `pulseIn()` function works properly with a pulse length of 10 microseconds and more.
+The reading of the PWM duty is implemented with the `pulseIn()` function of Arduino Core library. This leads to reading in a `HIGH` pulse with a **minimal length of 1 microsecond**.\
+But as you can read in the [Arduino Reference](https://www.arduino.cc/reference/en/language/functions/advanced-io/pulsein/), the `pulseIn()` function only works properly with pulse lengths of 10 microseconds and more.
 
 <br />
 
 The default PWM frequency of GRBL is 977Hz.\
-With the default minimum PWM duty of $\frac{1}{255}$, the minimum PWM pulse length is:
+With the default minimal PWM duty of $\frac{1}{255}$, the minimal PWM pulse length is:
 
-$\frac{1s}{977Hz} \cdot \frac{1}{255} = 4{\mu}s$
+$\frac{1}{977Hz} \cdot \frac{1}{255} = 4{\mu}s$
 
 <br />
 
@@ -190,7 +190,7 @@ $\frac{10{\mu}s}{4{\mu}s} \cdot \frac{1}{255} \cdot 100\\% = 1\\%$
 
 ## License
 
-GRBL-HBridge is published under the terms of **GNU General Public License v3.0** to ensure conformity with the GRBL project.
+GRBL_HBridge is published under the terms of **GNU General Public License v3.0** to ensure conformity with the GRBL project.
 
 <br />
 
